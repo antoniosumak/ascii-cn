@@ -1,7 +1,7 @@
 import registry from "@/registry.json"
 
 export const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://asciicn.sumak.dev"
-export const githubUrl = process.env.NEXT_PUBLIC_GITHUB_URL ?? "https://github.com/asciicn/asciicn"
+export const githubUrl = process.env.NEXT_PUBLIC_GITHUB_URL ?? "https://github.com/antoniosumak/ascii-cn"
 
 export type RegistryItem = (typeof registry.items)[number]
 
