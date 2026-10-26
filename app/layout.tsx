@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono, IBM_Plex_Mono, Instrument_Serif } from "next/font/google"
+import Script from "next/script"
 
 import { SiteHeader } from "@/components/site/site-header"
 
@@ -36,6 +37,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-full flex-col">
         <SiteHeader />
         {children}
+        {/* data-domains limits tracking to production, so localhost and preview URLs aren't counted. */}
+        <Script
+          src="https://umami.theasagency.com/script.js"
+          data-website-id="241eb59c-0bc6-4737-bd27-311427de2ea1"
+          data-domains="asciicn.sumak.dev"
+        />
       </body>
     </html>
   )
