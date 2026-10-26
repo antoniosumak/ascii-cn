@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ascii-matrix",
+  "title": "ASCII Matrix",
+  "description": "Digital rain with flickering katakana and fading trails.",
+  "registryDependencies": [
+    "@asciicn/ascii-core"
+  ],
+  "files": [
+    {
+      "path": "components/ascii/ascii-matrix.tsx",
+      "content": "\"use client\"\r\n\r\nimport { useRef } from \"react\"\r\n\r\nimport { AsciiCanvas, charsets, type AsciiCanvasProps, type AsciiFrame } from \"@/lib/ascii\"\r\nimport { cn } from \"@/lib/utils\"\r\n\r\nexport type AsciiMatrixProps = Omit<AsciiCanvasProps, \"field\" | \"frame\" | \"source\"> & {\r\n  /** Characters the rain is made of. */\r\n  glyphs?: string\r\n  /** Rows per second for an average drop. */\r\n  speed?: number\r\n  /** 0 to 1, share of columns with a falling drop. */\r\n  density?: number\r\n}\r\n\r\ntype Drop = { y: number; speed: number; length: number }\r\n\r\nexport function AsciiMatrix({\r\n  glyphs = charsets.katakana.trim() + \"0123456789\",\r\n  speed = 14,\r\n  density = 0.7,\r\n  className,\r\n  ...props\r\n}: AsciiMatrixProps) {\r\n  const drops = useRef<Drop[]>([])\r\n  const last = useRef(0)\r\n  const codes = Array.from(glyphs, (c) => c.charCodeAt(0))\r\n\r\n  // Lower density starts drops further above the top edge, which leaves longer gaps between them.\r\n  const spawn = (rows: number, onScreen: boolean): Drop => ({\r\n    y: onScreen ? Math.random() * rows : (-Math.random() * rows) / Math.max(0.05, density),\r\n    speed: speed * (0.5 + Math.random()),\r\n    length: 6 + Math.random() * rows * 0.6,\r\n  })\r\n\r\n  const frame: AsciiFrame = (f, t) => {\r\n    const dt = Math.min(0.1, Math.max(0, t - last.current))\r\n    last.current = t\r\n    if (drops.current.length !== f.cols) {\r\n      drops.current = Array.from({ length: f.cols }, () => spawn(f.rows, true))\r\n    }\r\n    for (let c = 0; c < f.cols; c++) {\r\n      const d = drops.current[c]\r\n      d.y += d.speed * dt\r\n      if (d.y - d.length > f.rows) drops.current[c] = spawn(f.rows, false)\r\n      const head = Math.floor(d.y)\r\n      for (let k = 0; k < d.length; k++) {\r\n        const r = head - k\r\n        if (r < 0 || r >= f.rows) continue\r\n        const i = r * f.cols + c\r\n        f.tone[i] = k === 0 ? 1 : 0.9 * (1 - k / d.length)\r\n        // Glyphs flicker at their own pace instead of scrolling with the drop.\r\n        const seed = (c * 7919 + r * 104729 + Math.floor(t * (2 + (c % 5)))) % codes.length\r\n        f.glyph[i] = codes[seed]\r\n      }\r\n    }\r\n  }\r\n\r\n  return (\r\n    <AsciiCanvas\r\n      aria-hidden\r\n      role=\"presentation\"\r\n      frame={frame}\r\n      opacity\r\n      className={cn(\"pointer-events-none\", className)}\r\n      {...props}\r\n    />\r\n  )\r\n}\r\n",
+      "type": "registry:component",
+      "target": "components/ascii/ascii-matrix.tsx"
+    }
+  ],
+  "categories": [
+    "backgrounds"
+  ],
+  "type": "registry:component"
+}

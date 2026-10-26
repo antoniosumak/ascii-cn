@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ascii-box",
+  "title": "ASCII Box",
+  "description": "Box-drawing frames that stretch to any content.",
+  "files": [
+    {
+      "path": "components/ascii/ascii-box.tsx",
+      "content": "import type { ComponentProps, ReactNode } from \"react\"\r\n\r\nimport { cn } from \"@/lib/utils\"\r\n\r\nconst borders = {\r\n  single: \"┌┐└┘─│\",\r\n  double: \"╔╗╚╝═║\",\r\n  round: \"╭╮╰╯─│\",\r\n  heavy: \"┏┓┗┛━┃\",\r\n  ascii: \"++++-|\",\r\n} as const\r\n\r\nexport type AsciiBoxProps = ComponentProps<\"div\"> & {\r\n  variant?: keyof typeof borders\r\n  title?: ReactNode\r\n}\r\n\r\n/**\r\n * A box-drawing frame that stretches to any size. Edges are repeated with CSS,\r\n * so it never measures text and the corners stay aligned on the character grid.\r\n */\r\nexport function AsciiBox({ variant = \"single\", title, className, children, ...props }: AsciiBoxProps) {\r\n  const [tl, tr, bl, br, h, v] = borders[variant]\r\n  const line = (ch: string) => (\r\n    <span aria-hidden className=\"min-w-0 flex-1 overflow-hidden whitespace-pre\">\r\n      {ch.repeat(400)}\r\n    </span>\r\n  )\r\n  // Absolutely positioned so the 200-glyph column never adds to the row height.\r\n  const side = (\r\n    <div aria-hidden className=\"relative\">\r\n      <div className=\"absolute inset-0 overflow-hidden whitespace-pre\">{`${v}\r\n`.repeat(200)}</div>\r\n    </div>\r\n  )\r\n  return (\r\n    <div className={cn(\"grid grid-cols-[1ch_1fr_1ch] font-mono leading-none\", className)} {...props}>\r\n      <span aria-hidden>{tl}</span>\r\n      <div className=\"flex min-w-0\">\r\n        {h}\r\n        {title && <span className=\"px-[1ch] whitespace-pre\">{title}</span>}\r\n        {line(h)}\r\n      </div>\r\n      <span aria-hidden>{tr}</span>\r\n      {side}\r\n      <div className=\"min-w-0 px-[1ch] py-[1lh] leading-normal\">{children}</div>\r\n      {side}\r\n      <span aria-hidden>{bl}</span>\r\n      {line(h)}\r\n      <span aria-hidden>{br}</span>\r\n    </div>\r\n  )\r\n}\r\n",
+      "type": "registry:component",
+      "target": "components/ascii/ascii-box.tsx"
+    }
+  ],
+  "categories": [
+    "interface"
+  ],
+  "type": "registry:component"
+}

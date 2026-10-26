@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ascii-video",
+  "title": "ASCII Video",
+  "description": "Video files, streams or the webcam, converted every frame.",
+  "registryDependencies": [
+    "@asciicn/ascii-core"
+  ],
+  "files": [
+    {
+      "path": "components/ascii/ascii-video.tsx",
+      "content": "\"use client\"\r\n\r\nimport { useEffect, useEffectEvent, useState } from \"react\"\r\n\r\nimport { AsciiCanvas, type AsciiCanvasProps } from \"@/lib/ascii\"\r\nimport { cn } from \"@/lib/utils\"\r\n\r\nexport type AsciiVideoProps = Omit<AsciiCanvasProps, \"source\" | \"mirror\"> & {\r\n  /** A video URL, a MediaStream, or \"webcam\" to ask for the user's camera. */\r\n  src: string | MediaStream\r\n  /** Mirror horizontally. Defaults to true for the webcam. */\r\n  mirror?: boolean\r\n  onError?: (error: unknown) => void\r\n}\r\n\r\nexport function AsciiVideo({ src, mirror, onError, className, ...props }: AsciiVideoProps) {\r\n  const [video, setVideo] = useState<HTMLVideoElement | null>(null)\r\n  const [aspect, setAspect] = useState(16 / 9)\r\n  const fail = useEffectEvent((error: unknown) => onError?.(error))\r\n\r\n  useEffect(() => {\r\n    const el = document.createElement(\"video\")\r\n    el.muted = true\r\n    el.loop = true\r\n    el.playsInline = true\r\n    el.crossOrigin = \"anonymous\"\r\n    let stream: MediaStream | null = null\r\n    let cancelled = false\r\n\r\n    el.onloadeddata = () => {\r\n      setAspect(el.videoWidth / el.videoHeight)\r\n      setVideo(el)\r\n      el.play().catch(fail)\r\n    }\r\n\r\n    if (src === \"webcam\") {\r\n      navigator.mediaDevices\r\n        .getUserMedia({ video: { facingMode: \"user\" } })\r\n        .then((s) => {\r\n          if (cancelled) return s.getTracks().forEach((t) => t.stop())\r\n          stream = s\r\n          el.srcObject = s\r\n        })\r\n        .catch(fail)\r\n    } else if (typeof src === \"string\") {\r\n      el.src = src\r\n    } else {\r\n      el.srcObject = src\r\n    }\r\n\r\n    return () => {\r\n      cancelled = true\r\n      el.pause()\r\n      el.onloadeddata = null\r\n      stream?.getTracks().forEach((t) => t.stop())\r\n      setVideo(null)\r\n    }\r\n  }, [src])\r\n\r\n  return (\r\n    <div className={cn(\"relative w-full overflow-hidden\", className)} style={{ aspectRatio: aspect }}>\r\n      <AsciiCanvas source={video} mirror={mirror ?? src === \"webcam\"} className=\"absolute inset-0\" {...props} />\r\n    </div>\r\n  )\r\n}\r\n",
+      "type": "registry:component",
+      "target": "components/ascii/ascii-video.tsx"
+    }
+  ],
+  "categories": [
+    "images"
+  ],
+  "type": "registry:component"
+}

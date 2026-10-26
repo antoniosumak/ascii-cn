@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ascii-image",
+  "title": "ASCII Image",
+  "description": "Any photo as live ASCII. Dither, colour from the source, reveal the original on hover.",
+  "registryDependencies": [
+    "@asciicn/ascii-core"
+  ],
+  "files": [
+    {
+      "path": "components/ascii/ascii-image.tsx",
+      "content": "\"use client\"\n\nimport { useEffect, useState } from \"react\"\n\nimport { AsciiCanvas, type AsciiCanvasProps } from \"@/lib/ascii\"\nimport { cn } from \"@/lib/utils\"\n\nexport type AsciiImageProps = Omit<AsciiCanvasProps, \"source\"> & {\n  src: string\n  alt: string\n  /** Cross-fade to the original photo on hover. */\n  reveal?: boolean\n}\n\nexport function AsciiImage({ src, alt, reveal = false, className, ...props }: AsciiImageProps) {\n  const [image, setImage] = useState<HTMLImageElement | null>(null)\n\n  useEffect(() => {\n    const img = new Image()\n    img.crossOrigin = \"anonymous\"\n    img.onload = () => setImage(img)\n    img.src = src\n    return () => {\n      img.onload = null\n    }\n  }, [src])\n\n  return (\n    <div\n      className={cn(\"group relative w-full overflow-hidden\", className)}\n      style={{ aspectRatio: image ? `${image.naturalWidth} / ${image.naturalHeight}` : \"1\" }}\n    >\n      <AsciiCanvas source={image} aria-label={alt} className=\"absolute inset-0\" {...props} />\n      {reveal && (\n        // eslint-disable-next-line @next/next/no-img-element -- crossfade target must be the same file the canvas samples\n        <img\n          src={src}\n          alt=\"\"\n          className=\"absolute inset-0 size-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100\"\n        />\n      )}\n    </div>\n  )\n}\n",
+      "type": "registry:component",
+      "target": "components/ascii/ascii-image.tsx"
+    }
+  ],
+  "categories": [
+    "images"
+  ],
+  "type": "registry:component"
+}

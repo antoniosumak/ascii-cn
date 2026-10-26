@@ -1,0 +1,545 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "asciicn",
+  "homepage": "https://asciicn.sumak.dev",
+  "items": [
+    {
+      "name": "ascii-core",
+      "type": "registry:lib",
+      "title": "ASCII engine",
+      "description": "Samples images, video, fields and frames onto a character grid, dithers, paints to canvas, exports text, SVG and PNG.",
+      "categories": [
+        "engine"
+      ],
+      "files": [
+        {
+          "path": "lib/ascii/charsets.ts",
+          "type": "registry:lib",
+          "target": "lib/ascii/charsets.ts"
+        },
+        {
+          "path": "lib/ascii/engine.ts",
+          "type": "registry:lib",
+          "target": "lib/ascii/engine.ts"
+        },
+        {
+          "path": "lib/ascii/ascii-canvas.tsx",
+          "type": "registry:lib",
+          "target": "lib/ascii/ascii-canvas.tsx"
+        },
+        {
+          "path": "lib/ascii/index.ts",
+          "type": "registry:lib",
+          "target": "lib/ascii/index.ts"
+        }
+      ]
+    },
+    {
+      "name": "asciicn-skill",
+      "type": "registry:item",
+      "title": "Agent skill",
+      "description": "Engine plus a SKILL.md that teaches coding agents to build custom ASCII components.",
+      "categories": [
+        "engine"
+      ],
+      "registryDependencies": [
+        "@asciicn/ascii-core"
+      ],
+      "files": [
+        {
+          "path": "skill/SKILL.md",
+          "type": "registry:file",
+          "target": ".claude/skills/asciicn/SKILL.md"
+        },
+        {
+          "path": "skill/SKILL.md",
+          "type": "registry:file",
+          "target": ".agents/skills/asciicn/SKILL.md"
+        }
+      ]
+    },
+    {
+      "name": "ascii-image",
+      "type": "registry:component",
+      "title": "ASCII Image",
+      "description": "Any photo as live ASCII. Dither, colour from the source, reveal the original on hover.",
+      "categories": [
+        "images"
+      ],
+      "registryDependencies": [
+        "@asciicn/ascii-core"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-image.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-image.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-video",
+      "type": "registry:component",
+      "title": "ASCII Video",
+      "description": "Video files, streams or the webcam, converted every frame.",
+      "categories": [
+        "images"
+      ],
+      "registryDependencies": [
+        "@asciicn/ascii-core"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-video.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-video.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-background",
+      "type": "registry:component",
+      "title": "ASCII Background",
+      "description": "Eleven animated fields for heroes and sections, from plasma and starfield to a synthwave grid.",
+      "categories": [
+        "backgrounds"
+      ],
+      "registryDependencies": [
+        "@asciicn/ascii-core"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-background.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-background.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-matrix",
+      "type": "registry:component",
+      "title": "ASCII Matrix",
+      "description": "Digital rain with flickering katakana and fading trails.",
+      "categories": [
+        "backgrounds"
+      ],
+      "registryDependencies": [
+        "@asciicn/ascii-core"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-matrix.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-matrix.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-donut",
+      "type": "registry:component",
+      "title": "ASCII Donut",
+      "description": "The classic donut.c torus, lit and z-buffered.",
+      "categories": [
+        "backgrounds"
+      ],
+      "registryDependencies": [
+        "@asciicn/ascii-core"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-donut.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-donut.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-text",
+      "type": "registry:component",
+      "title": "ASCII Text",
+      "description": "Display type built from glyphs. Any font, no FIGlet files.",
+      "categories": [
+        "text"
+      ],
+      "registryDependencies": [
+        "@asciicn/ascii-core"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-text.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-text.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-scramble",
+      "type": "registry:component",
+      "title": "ASCII Scramble",
+      "description": "Text that decodes out of random glyphs on mount or hover.",
+      "categories": [
+        "text"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-scramble.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-scramble.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-progress",
+      "type": "registry:component",
+      "title": "ASCII Progress",
+      "description": "Progress bars with eighth-block precision, in five styles.",
+      "categories": [
+        "interface"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-progress.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-progress.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-spinner",
+      "type": "registry:component",
+      "title": "ASCII Spinner",
+      "description": "Terminal loading spinners: braille, line, arc, quadrant and more.",
+      "categories": [
+        "interface"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-spinner.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-spinner.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-chart",
+      "type": "registry:component",
+      "title": "ASCII Chart",
+      "description": "Sparklines and labelled bar charts drawn with block elements.",
+      "categories": [
+        "charts"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-chart.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-box",
+      "type": "registry:component",
+      "title": "ASCII Box",
+      "description": "Box-drawing frames that stretch to any content.",
+      "categories": [
+        "interface"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-box.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-box.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-globe",
+      "type": "registry:component",
+      "title": "ASCII Globe",
+      "description": "A rotating planet with lit continents, drawn in characters.",
+      "categories": [
+        "backgrounds"
+      ],
+      "registryDependencies": [
+        "@asciicn/ascii-core"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-globe.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-globe.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-line-chart",
+      "type": "registry:component",
+      "title": "ASCII Line Chart",
+      "description": "ASCII line charts with axes, several series and a scrubbing readout.",
+      "categories": [
+        "charts"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-line-chart.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-line-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-area-chart",
+      "type": "registry:component",
+      "title": "ASCII Area Chart",
+      "description": "Stacked or overlapping areas: ASCII lines over glyph fills.",
+      "categories": [
+        "charts"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "registryDependencies": [
+        "@asciicn/ascii-line-chart"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-area-chart.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-area-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-column-chart",
+      "type": "registry:component",
+      "title": "ASCII Column Chart",
+      "description": "Vertical bars stacked from square shade blocks, grouped by label, that build up block by block.",
+      "categories": [
+        "charts"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-column-chart.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-column-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-pie-chart",
+      "type": "registry:component",
+      "title": "ASCII Pie Chart",
+      "description": "A pie or donut in braille that sweeps in clockwise and pops a slice out on hover.",
+      "categories": [
+        "charts"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-pie-chart.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-pie-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-heatmap",
+      "type": "registry:component",
+      "title": "ASCII Heatmap",
+      "description": "A contribution-style calendar grid in shade blocks.",
+      "categories": [
+        "charts"
+      ],
+      "dependencies": [
+        "motion"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-heatmap.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-heatmap.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-gauge",
+      "type": "registry:component",
+      "title": "ASCII Gauge",
+      "description": "A dial for one value, drawn in braille.",
+      "categories": [
+        "charts"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-gauge.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-gauge.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-uptime",
+      "type": "registry:component",
+      "title": "ASCII Uptime",
+      "description": "Status bars for uptime over time, one block per day.",
+      "categories": [
+        "charts"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-uptime.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-uptime.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-button",
+      "type": "registry:component",
+      "title": "ASCII Button",
+      "description": "Buttons framed in brackets, boxes, arrows or underlines that come alive on hover.",
+      "categories": [
+        "interface"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-button.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-button.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-skeleton",
+      "type": "registry:component",
+      "title": "ASCII Skeleton",
+      "description": "Loading placeholders that shimmer through shade blocks.",
+      "categories": [
+        "interface"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-skeleton.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-skeleton.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-avatar",
+      "type": "registry:component",
+      "title": "ASCII Avatar",
+      "description": "Generative identicons from any string, in block glyphs.",
+      "categories": [
+        "interface"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-avatar.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-avatar.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-divider",
+      "type": "registry:component",
+      "title": "ASCII Divider",
+      "description": "Horizontal rules in box-drawing and pattern glyphs, with an optional label.",
+      "categories": [
+        "interface"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-divider.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-divider.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-dissolve",
+      "type": "registry:component",
+      "title": "ASCII Dissolve",
+      "description": "Text that dissolves into shade noise and resolves back.",
+      "categories": [
+        "text"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-dissolve.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-dissolve.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-image-compare",
+      "type": "registry:component",
+      "title": "ASCII Image Compare",
+      "description": "Drag a divider between a photo and its ASCII version.",
+      "categories": [
+        "images"
+      ],
+      "registryDependencies": [
+        "@asciicn/ascii-core"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-image-compare.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-image-compare.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-scroll-reveal",
+      "type": "registry:component",
+      "title": "ASCII Scroll Reveal",
+      "description": "An image that resolves from coarse glyphs to the photo as it scrolls into view.",
+      "categories": [
+        "images"
+      ],
+      "registryDependencies": [
+        "@asciicn/ascii-core"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-scroll-reveal.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-scroll-reveal.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii-marquee",
+      "type": "registry:component",
+      "title": "ASCII Marquee",
+      "description": "An endless marquee of words or logos, set in glyphs.",
+      "categories": [
+        "images"
+      ],
+      "registryDependencies": [
+        "@asciicn/ascii-core"
+      ],
+      "files": [
+        {
+          "path": "components/ascii/ascii-marquee.tsx",
+          "type": "registry:component",
+          "target": "components/ascii/ascii-marquee.tsx"
+        }
+      ]
+    }
+  ]
+}

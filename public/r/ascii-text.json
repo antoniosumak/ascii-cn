@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ascii-text",
+  "title": "ASCII Text",
+  "description": "Display type built from glyphs. Any font, no FIGlet files.",
+  "registryDependencies": [
+    "@asciicn/ascii-core"
+  ],
+  "files": [
+    {
+      "path": "components/ascii/ascii-text.tsx",
+      "content": "\"use client\"\n\nimport { useEffect, useState } from \"react\"\n\nimport { AsciiCanvas, type AsciiCanvasProps } from \"@/lib/ascii\"\nimport { cn } from \"@/lib/utils\"\n\nexport type AsciiTextProps = Omit<AsciiCanvasProps, \"source\" | \"field\" | \"frame\" | \"ink\"> & {\n  text: string\n  /** CSS font used to rasterise the letters before they are filled with glyphs. */\n  font?: string\n}\n\n/** Big display type drawn out of smaller characters. Any font, no FIGlet files. */\nexport function AsciiText({\n  text,\n  font = \"900 160px ui-sans-serif, system-ui, sans-serif\",\n  fontSize = 8,\n  charset = \"blocks\",\n  className,\n  ...props\n}: AsciiTextProps) {\n  const [mask, setMask] = useState<HTMLCanvasElement | null>(null)\n\n  useEffect(() => {\n    let live = true\n    document.fonts.ready.then(() => {\n      if (!live) return\n      const canvas = document.createElement(\"canvas\")\n      const ctx = canvas.getContext(\"2d\")!\n      ctx.font = font\n      const m = ctx.measureText(text)\n      const pad = m.actualBoundingBoxAscent * 0.1\n      canvas.width = Math.ceil(m.width + pad * 2)\n      canvas.height = Math.ceil(m.actualBoundingBoxAscent + m.actualBoundingBoxDescent + pad * 2)\n      ctx.font = font\n      ctx.fillStyle = \"#fff\"\n      ctx.textBaseline = \"alphabetic\"\n      ctx.fillText(text, pad, pad + m.actualBoundingBoxAscent)\n      setMask(canvas)\n    })\n    return () => {\n      live = false\n    }\n  }, [text, font])\n\n  return (\n    <div\n      className={cn(\"relative w-full\", className)}\n      style={{ aspectRatio: mask ? `${mask.width} / ${mask.height}` : \"5 / 1\" }}\n    >\n      <AsciiCanvas\n        source={mask}\n        ink=\"light\"\n        fit=\"contain\"\n        fontSize={fontSize}\n        charset={charset}\n        aria-label={text}\n        className=\"absolute inset-0\"\n        {...props}\n      />\n    </div>\n  )\n}\n",
+      "type": "registry:component",
+      "target": "components/ascii/ascii-text.tsx"
+    }
+  ],
+  "categories": [
+    "text"
+  ],
+  "type": "registry:component"
+}

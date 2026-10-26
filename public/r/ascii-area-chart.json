@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ascii-area-chart",
+  "title": "ASCII Area Chart",
+  "description": "Stacked or overlapping areas: ASCII lines over glyph fills.",
+  "dependencies": [
+    "motion"
+  ],
+  "registryDependencies": [
+    "@asciicn/ascii-line-chart"
+  ],
+  "files": [
+    {
+      "path": "components/ascii/ascii-area-chart.tsx",
+      "content": "import { AsciiLineChart, type AsciiLineChartProps } from \"@/components/ascii/ascii-line-chart\"\r\n\r\nexport type AsciiAreaChartProps = Omit<AsciiLineChartProps, \"area\">\r\n\r\n/** An ASCII line chart with glyph-filled areas, denser just under each line. `stacked` piles the series on each other. */\r\nexport function AsciiAreaChart(props: AsciiAreaChartProps) {\r\n  return <AsciiLineChart area {...props} />\r\n}\r\n",
+      "type": "registry:component",
+      "target": "components/ascii/ascii-area-chart.tsx"
+    }
+  ],
+  "categories": [
+    "charts"
+  ],
+  "type": "registry:component"
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ascii-spinner",
+  "title": "ASCII Spinner",
+  "description": "Terminal loading spinners: braille, line, arc, quadrant and more.",
+  "files": [
+    {
+      "path": "components/ascii/ascii-spinner.tsx",
+      "content": "\"use client\"\n\nimport { useEffect, useState, type ComponentProps } from \"react\"\n\nimport { cn } from \"@/lib/utils\"\n\nexport const spinners = {\n  braille: { frames: \"⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏\", interval: 80 },\n  line: { frames: \"|/-\\\\\", interval: 100 },\n  arc: { frames: \"◜◠◝◞◡◟\", interval: 100 },\n  quadrant: { frames: \"▖▘▝▗\", interval: 120 },\n  bounce: { frames: \"⠁⠂⠄⡀⢀⠠⠐⠈\", interval: 90 },\n  pulse: { frames: \" ·•●•·\", interval: 140 },\n  grow: { frames: \"▁▂▃▄▅▆▇█▇▆▅▄▃▂\", interval: 80 },\n} as const\n\nexport type AsciiSpinnerProps = Omit<ComponentProps<\"span\">, \"children\"> & {\n  variant?: keyof typeof spinners\n  /** Announced to screen readers. */\n  label?: string\n}\n\nexport function AsciiSpinner({ variant = \"braille\", label = \"Loading\", className, ...props }: AsciiSpinnerProps) {\n  const { frames, interval } = spinners[variant]\n  const [i, setI] = useState(0)\n\n  useEffect(() => {\n    if (matchMedia(\"(prefers-reduced-motion: reduce)\").matches) return\n    const id = setInterval(() => setI((n) => n + 1), interval)\n    return () => clearInterval(id)\n  }, [interval])\n\n  return (\n    <span role=\"status\" className={cn(\"inline-block font-mono\", className)} {...props}>\n      <span aria-hidden>{frames[i % frames.length]}</span>\n      <span className=\"sr-only\">{label}</span>\n    </span>\n  )\n}\n",
+      "type": "registry:component",
+      "target": "components/ascii/ascii-spinner.tsx"
+    }
+  ],
+  "categories": [
+    "interface"
+  ],
+  "type": "registry:component"
+}

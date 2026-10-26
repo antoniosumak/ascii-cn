@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ascii-scramble",
+  "title": "ASCII Scramble",
+  "description": "Text that decodes out of random glyphs on mount or hover.",
+  "files": [
+    {
+      "path": "components/ascii/ascii-scramble.tsx",
+      "content": "\"use client\"\r\n\r\nimport { useEffect, useEffectEvent, useRef, useState, type ComponentProps } from \"react\"\r\n\r\nexport type AsciiScrambleProps = Omit<ComponentProps<\"span\">, \"children\"> & {\r\n  text: string\r\n  /** Glyphs shown while a letter is still decoding. */\r\n  glyphs?: string\r\n  /** Milliseconds for the whole text to settle. */\r\n  duration?: number\r\n  /** \"mount\" decodes once on mount, \"hover\" again on every pointer enter. */\r\n  trigger?: \"mount\" | \"hover\"\r\n}\r\n\r\nexport function AsciiScramble({\r\n  text,\r\n  glyphs = \"!<>-_\\\\/[]{}=+*^?#@$%&\",\r\n  duration = 900,\r\n  trigger = \"mount\",\r\n  onPointerEnter,\r\n  ...props\r\n}: AsciiScrambleProps) {\r\n  const [scrambled, setScrambled] = useState<string | null>(null)\r\n  const raf = useRef(0)\r\n\r\n  const run = () => {\r\n    if (matchMedia(\"(prefers-reduced-motion: reduce)\").matches) return\r\n    cancelAnimationFrame(raf.current)\r\n    const start = performance.now()\r\n    const step = (now: number) => {\r\n      const p = Math.min(1, (now - start) / duration)\r\n      const settled = Math.floor(p * text.length)\r\n      let out = text.slice(0, settled)\r\n      for (let i = settled; i < text.length; i++) {\r\n        out += text[i] === \" \" ? \" \" : glyphs[Math.floor(Math.random() * glyphs.length)]\r\n      }\r\n      setScrambled(p < 1 ? out : null)\r\n      if (p < 1) raf.current = requestAnimationFrame(step)\r\n    }\r\n    raf.current = requestAnimationFrame(step)\r\n  }\r\n\r\n  const runOnMount = useEffectEvent(() => trigger === \"mount\" && run())\r\n\r\n  useEffect(() => {\r\n    runOnMount()\r\n    return () => cancelAnimationFrame(raf.current)\r\n  }, [text])\r\n\r\n  return (\r\n    <span\r\n      onPointerEnter={(e) => {\r\n        if (trigger === \"hover\") run()\r\n        onPointerEnter?.(e)\r\n      }}\r\n      {...props}\r\n    >\r\n      <span className=\"sr-only\">{text}</span>\r\n      <span aria-hidden className=\"font-mono\">\r\n        {scrambled ?? text}\r\n      </span>\r\n    </span>\r\n  )\r\n}\r\n",
+      "type": "registry:component",
+      "target": "components/ascii/ascii-scramble.tsx"
+    }
+  ],
+  "categories": [
+    "text"
+  ],
+  "type": "registry:component"
+}

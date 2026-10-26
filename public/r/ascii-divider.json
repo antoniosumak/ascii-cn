@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ascii-divider",
+  "title": "ASCII Divider",
+  "description": "Horizontal rules in box-drawing and pattern glyphs, with an optional label.",
+  "files": [
+    {
+      "path": "components/ascii/ascii-divider.tsx",
+      "content": "import type { ComponentProps, ReactNode } from \"react\"\n\nimport { cn } from \"@/lib/utils\"\n\nexport const dividers = {\n  single: \"─\",\n  double: \"═\",\n  heavy: \"━\",\n  dashed: \"╌\",\n  dotted: \"┈\",\n  ascii: \"-\",\n  wave: \"∿\",\n  tilde: \"~\",\n  dots: \"·\",\n  beads: \"•·\",\n  chevron: \"<>\",\n  zigzag: \"/\\\\\",\n  overline: \"▔\",\n} as const\n\nexport type AsciiDividerProps = Omit<ComponentProps<\"div\">, \"children\"> & {\n  variant?: keyof typeof dividers\n  /** Your own repeating pattern, overrides `variant`. */\n  glyphs?: string\n  label?: ReactNode\n  align?: \"start\" | \"center\" | \"end\"\n}\n\n/** A rule that fills its container by repeating glyphs with overflow hidden, so it never measures text. */\nexport function AsciiDivider({ variant = \"single\", glyphs, label, align = \"center\", className, ...props }: AsciiDividerProps) {\n  const pattern = glyphs || dividers[variant]\n  const run = pattern.repeat(Math.ceil(400 / pattern.length))\n  const stub = <span aria-hidden>{pattern.repeat(Math.ceil(2 / pattern.length))}</span>\n  // The leading line clips on its left so a multi-glyph pattern still meets the label whole.\n  const lead = (\n    <span aria-hidden className=\"flex min-w-0 flex-1 justify-end overflow-hidden\">\n      <span className=\"shrink-0\">{run}</span>\n    </span>\n  )\n  const tail = (\n    <span aria-hidden className=\"min-w-0 flex-1 overflow-hidden\">\n      {run}\n    </span>\n  )\n  return (\n    <div\n      role=\"separator\"\n      aria-orientation=\"horizontal\"\n      aria-label={typeof label === \"string\" ? label : undefined}\n      // Contained so the 400-glyph runs never become the intrinsic width of a grid or shrink-to-fit parent.\n      className={cn(\n        \"flex w-full min-w-0 items-center font-mono leading-none whitespace-pre select-none contain-inline-size\",\n        className,\n      )}\n      {...props}\n    >\n      {label == null ? (\n        tail\n      ) : (\n        <>\n          {align === \"start\" ? stub : lead}\n          <span className=\"shrink-0 px-[1ch]\">{label}</span>\n          {align === \"end\" ? stub : tail}\n        </>\n      )}\n    </div>\n  )\n}\n",
+      "type": "registry:component",
+      "target": "components/ascii/ascii-divider.tsx"
+    }
+  ],
+  "categories": [
+    "interface"
+  ],
+  "type": "registry:component"
+}

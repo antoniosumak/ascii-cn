@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ascii-skeleton",
+  "title": "ASCII Skeleton",
+  "description": "Loading placeholders that shimmer through shade blocks.",
+  "files": [
+    {
+      "path": "components/ascii/ascii-skeleton.tsx",
+      "content": "\"use client\"\n\nimport { useSyncExternalStore, type ComponentProps } from \"react\"\n\nimport { cn } from \"@/lib/utils\"\n\nconst shades = \"░▒▓\"\n// Wave crests repeat every PERIOD glyphs, so even a narrow skeleton sees one pass by regularly.\nconst PERIOD = 36\nconst BAND = 5\nconst SPEED = 28\n\n// One shared clock: every skeleton on the page ticks together and the wave lines up across them.\nlet tick = -1\nlet timer: ReturnType<typeof setInterval> | undefined\nconst listeners = new Set<() => void>()\n\nfunction subscribe(listener: () => void) {\n  listeners.add(listener)\n  if (!timer && !matchMedia(\"(prefers-reduced-motion: reduce)\").matches) {\n    timer = setInterval(() => {\n      tick = performance.now() / 1000\n      listeners.forEach((l) => l())\n    }, 60)\n  }\n  return () => {\n    listeners.delete(listener)\n    if (!listeners.size) {\n      clearInterval(timer)\n      timer = undefined\n      tick = -1\n    }\n  }\n}\n\nfunction shadeRow(length: number, row: number, t: number) {\n  if (t < 0) return shades[0].repeat(length)\n  const crest = (t * SPEED) % PERIOD\n  let out = \"\"\n  for (let x = 0; x < length; x++) {\n    // Rows are offset so the crest sweeps diagonally.\n    const d = Math.abs(((x - row * 2 - crest) % PERIOD) + PERIOD) % PERIOD\n    const dist = Math.min(d, PERIOD - d)\n    out += shades[dist < BAND ? Math.round((1 - dist / BAND) * 2) : 0]\n  }\n  return out\n}\n\nconst textWidths = [1, 0.94, 0.98, 0.9, 0.96]\n\nexport type AsciiSkeletonProps = Omit<ComponentProps<\"div\">, \"children\"> & {\n  variant?: \"text\" | \"block\" | \"avatar\"\n  /** Rows of glyphs. */\n  lines?: number\n  /** Characters as a number, or any CSS width as a string. */\n  width?: number | string\n}\n\nexport function AsciiSkeleton({ variant = \"text\", lines, width, className, style, ...props }: AsciiSkeletonProps) {\n  const t = useSyncExternalStore(\n    subscribe,\n    () => tick,\n    () => -1,\n  )\n  const rows = lines ?? (variant === \"text\" ? 3 : 2)\n  const w = width ?? (variant === \"avatar\" ? 4 : \"100%\")\n  const chars = typeof w === \"number\" ? w : 240\n  const share = (i: number) =>\n    variant !== \"text\" || rows === 1 ? 1 : i === rows - 1 ? 0.6 : textWidths[i % textWidths.length]\n\n  return (\n    <div\n      aria-hidden\n      className={cn(\n        \"flex flex-col overflow-hidden font-mono leading-none whitespace-pre select-none\",\n        variant === \"text\" && \"gap-[0.6em]\",\n        // Without containment the 240-glyph rows would set the intrinsic width and push a flex parent wide.\n        typeof w === \"number\" ? \"w-fit\" : \"contain-inline-size\",\n        className,\n      )}\n      style={{ width: typeof w === \"string\" ? w : undefined, ...style }}\n      {...props}\n    >\n      {Array.from({ length: rows }, (_, i) => (\n        <span key={i} className=\"overflow-hidden\" style={typeof w === \"string\" ? { width: `${share(i) * 100}%` } : undefined}>\n          {shadeRow(typeof w === \"string\" ? chars : Math.round(chars * share(i)), i, t)}\n        </span>\n      ))}\n    </div>\n  )\n}\n",
+      "type": "registry:component",
+      "target": "components/ascii/ascii-skeleton.tsx"
+    }
+  ],
+  "categories": [
+    "interface"
+  ],
+  "type": "registry:component"
+}
