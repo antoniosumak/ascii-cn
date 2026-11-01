@@ -9,10 +9,12 @@ import { AsciiImageCompare } from "@/components/ascii/ascii-image-compare"
 import { AsciiMatrix } from "@/components/ascii/ascii-matrix"
 import { AsciiText } from "@/components/ascii/ascii-text"
 import { MotionConfig } from "@/components/site/motion-config"
-import { HeroGarden, UptimeFill, HeroWord, InstallTerminal } from "@/components/site/landing"
+import { UptimeFill, HeroWord, InstallTerminal } from "@/components/site/landing"
+import { HeroStage } from "@/components/site/stage/hero-stage"
+import { SourceStage, StudioStage, ThemeStage } from "@/components/site/stage/feature-stages"
 import { Thumb } from "@/components/site/preview"
 import { Studio } from "@/app/studio/studio"
-import { categories, categoryOf, components, getItem, githubUrl, inCategory } from "@/lib/site"
+import { categories, categoryOf, components, getItem, githubUrl } from "@/lib/site"
 import { cn } from "@/lib/utils"
 
 const shortTitle = (title: string) => title.replace(/^ASCII /, "")
@@ -33,26 +35,39 @@ const notes: Record<string, string> = {
   "ascii-globe": "rotation 0.4 rad/s · lit",
 }
 
-const pieces = [
-  {
-    title: "The engine",
-    body: "lib/ascii turns any source into a grid of glyphs: photos, video frames, canvas fields or text. It maps brightness to a charset, can dither with Bayer or Floyd-Steinberg, and draws to a canvas, a pre or plain spans. Colours come from your shadcn theme. Animation pauses offscreen and respects reduced motion.",
-  },
-  {
-    title: "The components",
-    body: `${count} React components built on the engine. Each one is a single file with typed props and no extra runtime dependencies beyond React.`,
-  },
-  {
-    title: "The studio",
-    body: "A page for trying settings on your own image, clip or text before you install. It gives you the props, a PNG or a TXT file.",
-  },
-]
-
 const files = [
   ["components/ui/ascii-*.tsx", "One file per component, yours to edit."],
   ["lib/ascii/", "The engine. Added once, shared by every component."],
   ["globals.css", "--ascii-fg, --ascii-dim and --ascii-accent, read from your theme."],
   ["components.json", "The @asciicn registry entry, so the CLI knows where to look."],
+]
+
+const steps = [
+  {
+    n: "01",
+    title: "It lands as source",
+    body: "One command writes the component to components/ui and the engine to lib/ascii. No runtime package to update: read it, change it, ship it.",
+    stage: <SourceStage />,
+  },
+  {
+    n: "02",
+    title: "Your theme colours it",
+    body: "Glyphs are inked with --ascii-accent and your shadcn tokens, so a theme change recolours every component at once.",
+    stage: <ThemeStage />,
+  },
+  {
+    n: "03",
+    title: "The studio tunes it",
+    body: "Try charset, cell size and colour on your own photo, clip or text, then copy the props it gives you.",
+    stage: <StudioStage />,
+  },
+]
+
+const stats = [
+  [String(count), "components"],
+  [String(categories.length), "groups"],
+  ["1", "shared engine"],
+  ["0", "runtime deps"],
 ]
 
 const footerLinks = [
@@ -169,25 +184,15 @@ export default function Home() {
   return (
     <MotionConfig reducedMotion="user">
       <main className="dark flex flex-col bg-[#0A0A0A] text-[#EDEDED]">
-        <section className="relative overflow-hidden lg:h-[840px]">
-          <motion.div
-            initial={{ opacity: 0, scale: 1.06 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.6, ease }}
-            className="absolute inset-0 lg:left-auto lg:aspect-[1100/616]"
+        <section className="relative overflow-hidden">
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-[640px] bg-[radial-gradient(ellipse_50%_60%_at_78%_30%,rgb(244_169_58/0.07),transparent_70%)]" />
+          <div
+            className={cn(
+              container,
+              "relative grid grid-cols-1 items-center gap-12 pt-16 pb-16 lg:grid-cols-[minmax(0,500px)_minmax(0,1fr)] lg:gap-6 lg:pt-[72px] lg:pb-24 xl:pr-0",
+            )}
           >
-            <HeroGarden className="absolute inset-0" />
-            <div className="absolute inset-y-0 left-0 w-1/4 bg-linear-to-r from-[#0A0A0A] to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 h-1/4 bg-linear-to-t from-[#0A0A0A] to-transparent" />
-          </motion.div>
-          <div className="absolute inset-0 bg-linear-to-r from-[#0A0A0A] via-[#0A0A0A]/40 via-35% to-transparent to-60% max-lg:via-[#0A0A0A]/75 max-lg:to-[#0A0A0A]/40" />
-          <div className={cn(container, "relative flex flex-col gap-12 pt-16 pb-12 lg:block lg:h-full lg:pt-[88px] lg:pb-0")}>
-            <motion.div
-              initial="hidden"
-              animate="show"
-              variants={stagger(0.09, 0.15)}
-              className="relative z-10 flex max-w-[560px] flex-col items-start"
-            >
+            <motion.div initial="hidden" animate="show" variants={stagger(0.09, 0.15)} className="relative z-10 flex min-w-0 flex-col items-start">
               <motion.div variants={rise}>
                 <Link
                   href="/docs/ascii-uptime"
@@ -200,19 +205,20 @@ export default function Home() {
               </motion.div>
               <motion.h1
                 variants={rise}
-                className="mt-[30px] text-[56px] leading-none font-medium tracking-[-2px] text-[#F2F2F2] sm:text-[80px] sm:tracking-[-3.2px]">
+                className="mt-[30px] text-[52px] leading-none font-medium tracking-[-2px] text-[#F2F2F2] sm:text-[72px] sm:tracking-[-3px]"
+              >
                 Interfaces,
                 <br />
                 drawn in
                 <span className="sr-only"> characters.</span>
               </motion.h1>
-              <motion.div variants={rise} className="mt-3.5 w-full" aria-hidden>
+              <motion.div variants={rise} className="mt-3 w-full max-w-[480px]" aria-hidden>
                 <HeroWord />
               </motion.div>
-              <motion.p variants={rise} className="mt-[30px] max-w-[500px] text-[19px] leading-[29px] text-[#A3A3A3]">
-                Copy-paste components for React and shadcn/ui. Photos, video, type and terminal UI, drawn in glyphs and coloured by your theme.
+              <motion.p variants={rise} className="mt-7 max-w-[460px] text-lg leading-7 text-[#A3A3A3]">
+                Copy-paste components for React and shadcn/ui. Charts, photos, video, type and terminal UI, drawn in glyphs and coloured by your theme.
               </motion.p>
-              <motion.div variants={rise} className="mt-[30px] flex flex-wrap gap-2.5">
+              <motion.div variants={rise} className="mt-8 flex flex-wrap gap-2.5">
                 <Link
                   href="/docs/installation"
                   className="inline-flex h-11 items-center gap-2 rounded-[10px] bg-[#F4A93A] px-[18px] text-[15px] font-semibold text-[#1F1302] transition-[opacity,scale] hover:opacity-90 active:scale-[0.97]"
@@ -220,14 +226,67 @@ export default function Home() {
                   Get started <ArrowRightIcon className="size-4" />
                 </Link>
                 <Link
-                  href="/studio"
+                  href="/docs/components"
                   className="inline-flex h-11 items-center rounded-[10px] bg-[#111111] px-[18px] text-[15px] font-medium text-[#EDEDED] outline-1 -outline-offset-1 outline-[#2A2A2A] transition-[background-color,scale] hover:bg-[#161616] active:scale-[0.97]"
                 >
-                  Open the studio
+                  Browse {count} components
                 </Link>
               </motion.div>
             </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 24 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1, ease, delay: 0.3 }}
+              className="relative min-w-0"
+            >
+              <HeroStage />
+            </motion.div>
           </div>
+          <div className="border-y border-[#1A1A1A]">
+            <motion.dl {...inView} variants={stagger(0.06)} className={cn(container, "grid grid-cols-2 md:grid-cols-4")}>
+              {stats.map(([value, label], i) => (
+                <motion.div
+                  key={label}
+                  variants={rise}
+                  className={cn(
+                    "flex items-baseline gap-2.5 py-6 md:py-7",
+                    i > 0 && "md:border-l md:border-[#1A1A1A] md:pl-8",
+                    i % 2 === 1 && "max-md:border-l max-md:border-[#1A1A1A] max-md:pl-5",
+                    i > 1 && "max-md:border-t max-md:border-[#1A1A1A]",
+                  )}
+                >
+                  <dt className="sr-only">{label}</dt>
+                  <dd className="font-mono text-[28px] font-medium tracking-tight text-[#F4A93A]">{value}</dd>
+                  <dd className="text-sm text-[#8F8F8F]">{label}</dd>
+                </motion.div>
+              ))}
+            </motion.dl>
+          </div>
+        </section>
+
+        <section className={cn(container, "flex flex-col gap-14 pt-20 lg:pt-[120px]")}>
+          <SectionHeader
+            title="One command, then it's yours."
+            body="asciicn is an engine plus a shadcn registry. Every component installs as a file in your repo, takes its colours from your theme and can be tuned before you copy it."
+          />
+          <motion.div {...inView} variants={stagger(0.1)} className="grid gap-3 lg:grid-cols-3">
+            {steps.map((step) => (
+              <motion.div
+                key={step.n}
+                variants={rise}
+                className="flex min-w-0 flex-col overflow-hidden rounded-[20px] bg-[#121212] outline-1 -outline-offset-1 outline-[#1E1E1E]"
+              >
+                <div className="w-full">{step.stage}</div>
+                <div className="flex flex-col gap-2 border-t border-[#1A1A1A] px-6 pt-5 pb-6">
+                  <div className="flex items-baseline gap-3">
+                    <span className="font-mono text-xs text-[#F4A93A]">{step.n}</span>
+                    <h3 className="text-[17px] font-medium text-[#EDEDED]">{step.title}</h3>
+                  </div>
+                  <p className="text-[15px] leading-6 text-[#8F8F8F]">{step.body}</p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
         </section>
 
         <section className={cn(container, "flex flex-col gap-14 py-20 lg:py-[120px]")}>
@@ -259,44 +318,6 @@ export default function Home() {
           <motion.div {...inView} variants={rise} className="rounded-[20px] bg-[#0E0E0E] p-4 outline-1 -outline-offset-1 outline-[#1E1E1E] md:p-6">
             <Studio />
           </motion.div>
-        </section>
-
-        <section className={cn(container, "flex flex-col gap-12 pt-20 pb-20 lg:pb-[120px]")}>
-          <SectionHeader
-            title="What's inside."
-            body="asciicn is an open-source ASCII engine with a shadcn registry on top. Every component installs as source in your repo, so you can read it and change it."
-          />
-          <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
-            <motion.div {...inView} variants={stagger()} className="flex flex-col">
-              {pieces.map((p) => (
-                <motion.div key={p.title} variants={rise} className="flex flex-col gap-2.5 border-t border-[#1E1E1E] py-6">
-                  <h3 className="text-[17px] font-medium text-[#EDEDED]">{p.title}</h3>
-                  <p className="text-[15px] leading-6 text-[#8F8F8F]">{p.body}</p>
-                </motion.div>
-              ))}
-            </motion.div>
-            <motion.div {...inView} variants={stagger(0.06)} className="flex flex-col">
-              {categories.map((c) => {
-                const items = inCategory(c.id)
-                return (
-                  <motion.div key={c.id} variants={rise}>
-                    <Link
-                      href={`/docs/components#${c.id}`}
-                      className="group flex gap-6 border-t border-[#1E1E1E] py-5 max-sm:flex-col max-sm:gap-1"
-                    >
-                      <span className="flex w-[150px] shrink-0 items-end gap-2">
-                        <span className="text-[17px] font-medium text-[#EDEDED]">{c.title}</span>
-                        <span className="font-mono text-xs text-[#F4A93A]">{items.length}</span>
-                      </span>
-                      <span className="text-[15px] leading-6 text-[#8F8F8F] transition-colors group-hover:text-[#BDBDBD]">
-                        {items.map((i) => shortTitle(i.title)).join(", ")}
-                      </span>
-                    </Link>
-                  </motion.div>
-                )
-              })}
-            </motion.div>
-          </div>
         </section>
 
         <section className="border-t border-[#1A1A1A]">

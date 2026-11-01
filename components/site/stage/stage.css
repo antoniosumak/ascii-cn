@@ -1,0 +1,498 @@
+/* Stageshow scenes on the landing page. Every rule is scoped under its scene's root class. */
+
+/* Site look over the kit's dark theme: the page's own grays and amber. */
+.hs .ss-stage,
+.st .ss-stage {
+  --ss-canvas: #0e0e0e;
+  --ss-surface: #121212;
+  --ss-chrome: #161616;
+  --ss-raised: #1a1a1a;
+  --ss-text: #8f8f8f;
+  --ss-text-strong: #ededed;
+  --ss-text-faint: #5e5e5e;
+  --ss-term-bg: #0c0c0c;
+  --ss-term-path: #6b6b6b;
+  --ss-term-sigil: #f4a93a;
+  --ss-term-ok: #f4a93a;
+  --ss-shadow-hero: 0 0 0 1px rgb(255 255 255 / 0.07), 0 40px 80px -20px rgb(0 0 0 / 0.8);
+  --ss-shadow-satellite: 0 0 0 1px rgb(255 255 255 / 0.1), 0 24px 48px -12px rgb(0 0 0 / 0.85), 0 6px 14px -6px rgb(0 0 0 / 0.6);
+}
+
+/* ---------- Hero: corner bleed, terminal straddling the window's left edge ---------- */
+
+.hs {
+  & .ss-stage {
+    --gutter: 40px;
+    overflow: hidden;
+    background: transparent;
+    /* The window fades out at its foot over filler, instead of stopping on a hard line mid-page */
+    mask-image: linear-gradient(to bottom, #000 86%, transparent);
+  }
+
+  /* Wider than the container: the right edge is no longer the viewport's, so it fades too */
+  @media (min-width: 1480px) {
+    & .ss-stage {
+      mask-image: linear-gradient(to bottom, #000 86%, transparent), linear-gradient(to right, #000 88%, transparent);
+      mask-composite: intersect;
+    }
+  }
+
+  .hs-win {
+    position: absolute;
+    top: var(--gutter);
+    left: 150px;
+    width: 700px;
+    height: 640px;
+    box-shadow: var(--ss-shadow-hero);
+  }
+
+  .hs-app {
+    display: flex;
+    height: 100%;
+    background: var(--ss-surface);
+  }
+
+  .hs-side {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    width: 52px;
+    padding: 16px 0;
+    border-right: 1px solid var(--ss-line-faint);
+    background: var(--ss-canvas);
+
+    & > :first-child {
+      margin-bottom: 6px;
+    }
+  }
+
+  .hs-main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 14px;
+    /* The window runs 90px past the stage; its content stops a gutter short of the cut */
+    padding: 18px 130px 0 22px;
+    min-width: 0;
+  }
+
+  .hs-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 28px;
+  }
+
+  .hs-title {
+    color: var(--ss-text-strong);
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .hs-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px 16px 14px;
+    border-radius: 12px;
+    background: #0d0d0d;
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.06);
+  }
+
+  .hs-card-head {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .hs-label {
+    color: var(--ss-text);
+    font-size: 12px;
+    line-height: 1.3;
+  }
+
+  .hs-total {
+    height: 30px;
+    color: var(--ss-text-strong);
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    line-height: 30px;
+  }
+
+  .hs-plot {
+    position: relative;
+    display: grid;
+    height: 150px;
+  }
+
+  .hs-skeleton {
+    position: absolute;
+    inset: 12px 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    transition: opacity 0.35s ease;
+
+    &[data-hide] {
+      opacity: 0;
+    }
+  }
+
+  .hs-chart {
+    font-size: 11px;
+    line-height: 1.2;
+  }
+
+  .hs-list {
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    background: #0d0d0d;
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.05);
+  }
+
+  .hs-list-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 60px 40px;
+    align-items: center;
+    gap: 16px;
+    height: 40px;
+    padding: 0 14px;
+    border-bottom: 1px solid var(--ss-line-faint);
+  }
+
+  .hs-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .hs-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 10px;
+    background: #0d0d0d;
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.05);
+  }
+
+  /* The terminal: over the app's sidebar and the filler stats, a gutter from the stage's left and bottom */
+  .hs-term {
+    position: absolute;
+    left: var(--gutter);
+    bottom: 92px;
+    z-index: 5;
+    width: 372px;
+    height: 120px;
+    box-shadow: var(--ss-shadow-satellite);
+  }
+
+  .hs-term-body {
+    padding: 12px 14px;
+    font-family: var(--ss-mono);
+    font-size: 11px;
+    line-height: 1.7;
+    white-space: nowrap;
+  }
+
+  .hs-term-out {
+    padding-top: 2px;
+  }
+
+  .hs-term-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #bdbdbd;
+  }
+
+  .hs-term-mark {
+    display: inline-grid;
+    place-items: center;
+    width: 1ch;
+    color: var(--ss-term-ok);
+  }
+
+  .dim {
+    color: #5e5e5e;
+  }
+
+  .ok {
+    color: var(--ss-term-ok);
+  }
+
+  /* Compact: the card whole in a 358 column, the terminal across the foot */
+  & .ss-stage[data-layout="compact"] {
+    --gutter: 16px;
+    mask-image: linear-gradient(to bottom, #000 93%, transparent);
+  }
+  & .ss-stage[data-layout="compact"] .hs-win {
+    left: 16px;
+    width: 380px;
+    height: 540px;
+  }
+  & .ss-stage[data-layout="compact"] .hs-side {
+    display: none;
+  }
+  & .ss-stage[data-layout="compact"] .hs-main {
+    padding: 16px 54px 0 16px;
+  }
+  & .ss-stage[data-layout="compact"] .hs-plot {
+    height: 140px;
+  }
+  & .ss-stage[data-layout="compact"] .hs-stats {
+    display: none;
+  }
+  & .ss-stage[data-layout="compact"] .hs-term {
+    left: 16px;
+    bottom: 40px;
+    width: 326px;
+    height: 118px;
+  }
+  & .ss-stage[data-layout="compact"] .hs-term-body {
+    font-size: 10px;
+  }
+}
+
+/* ---------- Feature tiles: 400 x 300, pinned with a bottom bleed ---------- */
+
+.st {
+  & .ss-stage {
+    overflow: hidden;
+    background: radial-gradient(ellipse 70% 60% at 50% 40%, #171717 0%, #101010 100%);
+  }
+}
+
+/* Theme: the window inset top-left and off the bottom; the panel straddles its right edge */
+.st-theme {
+  .st-theme-win {
+    position: absolute;
+    top: 28px;
+    left: 28px;
+    width: 268px;
+    height: 300px;
+    box-shadow: var(--ss-shadow-hero);
+  }
+
+  .st-theme-body {
+    position: relative;
+    height: 100%;
+    background: #0d0d0d;
+  }
+
+  .st-theme-donut {
+    position: absolute;
+    top: 40px;
+    left: 12px;
+    width: 150px;
+    height: 150px;
+  }
+
+  .st-panel {
+    position: absolute;
+    top: 118px;
+    right: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 168px;
+    padding: 14px;
+    border-radius: 12px;
+    background: var(--ss-raised);
+    box-shadow: var(--ss-shadow-satellite);
+  }
+
+  .st-panel-label {
+    color: var(--ss-text);
+    font-family: var(--ss-mono);
+    font-size: 11px;
+    line-height: 1.3;
+  }
+
+  .st-swatches {
+    display: flex;
+    gap: 10px;
+  }
+
+  .st-swatch {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--c);
+    box-shadow: 0 0 0 2px var(--ss-raised), 0 0 0 3px transparent;
+    transition: box-shadow 0.2s ease, transform 0.15s ease;
+
+    &[data-on] {
+      box-shadow: 0 0 0 2px var(--ss-raised), 0 0 0 4px var(--c);
+    }
+    &[data-pressed] {
+      transform: scale(0.92);
+    }
+  }
+
+  .st-panel-value {
+    color: var(--ss-text-strong);
+    font-family: var(--ss-mono);
+    font-size: 13px;
+    line-height: 1.3;
+  }
+}
+
+/* Studio: a 1.25x close-up of the window, the slider row whole, off the bottom */
+.st-studio {
+  .st-studio-win {
+    position: absolute;
+    top: 28px;
+    left: 28px;
+    width: 344px;
+    height: 320px;
+    box-shadow: var(--ss-shadow-hero);
+  }
+
+  .st-studio-body {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    height: 100%;
+    padding: 12px;
+    background: var(--ss-surface);
+  }
+
+  .st-studio-preview {
+    position: relative;
+    height: 150px;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #050505;
+  }
+
+  .st-studio-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .st-slider {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 4px;
+  }
+
+  .st-slider-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 16px;
+    color: var(--ss-text-strong);
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .st-slider-value {
+    color: var(--ss-text);
+    font-family: var(--ss-mono);
+    font-size: 11px;
+  }
+
+  .st-slider-track {
+    position: relative;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--ss-ink-3);
+  }
+
+  .st-slider-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    border-radius: 2px;
+    background: #f4a93a;
+
+    &.st-slider-fill--quiet {
+      background: var(--ss-ink-4);
+    }
+  }
+
+  .st-slider-thumb {
+    position: absolute;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #ededed;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 0.4), 0 2px 6px rgb(0 0 0 / 0.5);
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Source: the editor inset top-left, off the right and the bottom */
+.st-source {
+  .st-source-win {
+    position: absolute;
+    top: 28px;
+    left: 28px;
+    width: 420px;
+    height: 300px;
+    box-shadow: var(--ss-shadow-hero);
+  }
+
+  .st-tree {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 6px 8px;
+  }
+
+  .st-tree-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 24px;
+    border-radius: 6px;
+    color: var(--ss-text);
+    font-size: 12px;
+    white-space: nowrap;
+
+    &[data-active] {
+      background: rgb(244 169 58 / 0.12);
+      color: #f4a93a;
+    }
+  }
+
+  .st-tree-glyph {
+    width: 8px;
+    color: var(--ss-text-faint);
+    font-size: 10px;
+  }
+
+  .st-source-body {
+    height: 100%;
+    background: #0d0d0d;
+  }
+
+  .st-source-tab {
+    display: flex;
+    align-items: center;
+    height: 34px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--ss-line-faint);
+    color: var(--ss-text-strong);
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    &[data-on] {
+      opacity: 1;
+    }
+  }
+
+  .st-code {
+    padding: 10px 0;
+    font-size: 11px;
+  }
+}
